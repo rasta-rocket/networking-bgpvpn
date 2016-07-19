@@ -14,6 +14,7 @@
 #    under the License.
 
 import json
+import uuid
 
 from oslo_log import log
 from oslo_utils import uuidutils
@@ -137,6 +138,10 @@ class OpenContrailBGPVPNDriver(driver_api.BGPVPNDriverBase):
 
         return bgpvpn
 
+    def _is_tenant_id_exist(self, oc_client, tenant_id):
+        tenant_id = str(uuid.UUID(tenant_id))
+        oc_client.show('Project', tenant_id)
+
     def create_bgpvpn(self, context, bgpvpn):
         LOG.debug("create_bgpvpn_ called with %s" % bgpvpn)
 
@@ -152,9 +157,13 @@ class OpenContrailBGPVPNDriver(driver_api.BGPVPNDriverBase):
             raise bgpvpn_ext.BGPVPNRDNotSupported(
                 driver=OPENCONTRAIL_BGPVPN_DRIVER_NAME)
 
+        oc_client = self._get_opencontrail_api_client(context)
+
+        # Check if tenant ID exist
+        self._is_tenant_id_exist(oc_client, bgpvpn['tenant_id'])
+
         bgpvpn['id'] = uuidutils.generate_uuid()
 
-        oc_client = self._get_opencontrail_api_client(context)
         oc_client.kv_store('STORE', key=bgpvpn['id'], value={'bgpvpn': bgpvpn})
 
         return utils.make_bgpvpn_dict(bgpvpn)
