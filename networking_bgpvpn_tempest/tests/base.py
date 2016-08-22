@@ -37,6 +37,7 @@ class BaseBgpvpnTest(test.BaseNetworkTest):
     credentials = ['primary', 'admin']
     bgpvpn_client = None
     bgpvpn_admin_client = None
+    bgpvpn_alt_client = None
 
     @classmethod
     def resource_cleanup(cls):
@@ -58,6 +59,14 @@ class BaseBgpvpnTest(test.BaseNetworkTest):
             **cls.os.default_params)
         cls.bgpvpn_admin_client = bgpvpn_client.BgpvpnClient(
             cls.os_adm.auth_provider,
+            CONF.network.catalog_type,
+            CONF.network.region or CONF.identity.region,
+            endpoint_type=CONF.network.endpoint_type,
+            build_interval=CONF.network.build_interval,
+            build_timeout=CONF.network.build_timeout,
+            **cls.os.default_params)
+        cls.bgpvpn_alt_client = bgpvpn_client.BgpvpnClient(
+            cls.alt_manager.auth_provider,
             CONF.network.catalog_type,
             CONF.network.region or CONF.identity.region,
             endpoint_type=CONF.network.endpoint_type,
