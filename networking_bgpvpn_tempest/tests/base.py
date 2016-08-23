@@ -34,7 +34,7 @@ class BaseBgpvpnTest(test.BaseNetworkTest):
 
     """
 
-    credentials = ['primary', 'admin']
+    credentials = ['primary', 'admin', 'alt']
     bgpvpn_client = None
     bgpvpn_admin_client = None
     bgpvpn_alt_client = None
@@ -64,7 +64,7 @@ class BaseBgpvpnTest(test.BaseNetworkTest):
             endpoint_type=CONF.network.endpoint_type,
             build_interval=CONF.network.build_interval,
             build_timeout=CONF.network.build_timeout,
-            **cls.os.default_params)
+            **cls.os_adm.default_params)
         cls.bgpvpn_alt_client = bgpvpn_client.BgpvpnClient(
             cls.alt_manager.auth_provider,
             CONF.network.catalog_type,
@@ -72,7 +72,7 @@ class BaseBgpvpnTest(test.BaseNetworkTest):
             endpoint_type=CONF.network.endpoint_type,
             build_interval=CONF.network.build_interval,
             build_timeout=CONF.network.build_timeout,
-            **cls.os.default_params)
+            **cls.alt_manager.default_params)
         super(BaseBgpvpnTest, cls).resource_setup()
 
     @classmethod

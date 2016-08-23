@@ -49,5 +49,5 @@ class BgpvpnTest(base):
     def test_read_bgpvpn_as_not_owner_fail(self):
         bgpvpn = self.create_bgpvpn(self.bgpvpn_admin_client,
                                     tenant_id=self.bgpvpn_client.tenant_id)
-        bgpvpns_alt_client = self.bgpvpn_alt_client.list_bgpvpns()
-        self.assertIn(bgpvpn['id'], bpvpns_alt_client)
+        bgpvpns_alt = self.bgpvpn_alt_client.list_bgpvpns()['bgpvpns']
+        self.assertNotIn(bgpvpn['id'], [bgpvpn_alt['id'] for bgpvpn_alt in bgpvpns_alt])
